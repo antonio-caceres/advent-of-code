@@ -1,5 +1,7 @@
 # Antonio Caceres: Advent of Code
 
+All solutions written in Python 3.10.0.
+
 ### Problem Prompts
 
 These scripts are solutions to problems at [Advent of Code](https://adventofcode.com/).
