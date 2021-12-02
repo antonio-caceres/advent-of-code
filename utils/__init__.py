@@ -1,5 +1,5 @@
 
-import read
+from . import read
 
 _PUZZLE_INPUT_FILE = "data/day{}.txt"
 
