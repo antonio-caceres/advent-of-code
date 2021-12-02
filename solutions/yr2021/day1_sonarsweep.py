@@ -1,6 +1,6 @@
 """Day 1: Sonar Sweep"""
 
-from utils import read
+import utils
 
 
 def count_increasing_windows(nums, length):
@@ -26,6 +26,6 @@ def count_increasing_windows(nums, length):
 
 
 if __name__ == "__main__":
-    puzzle_input = read.read_ints(read.puzzle_input(day=1))
+    puzzle_input = utils.read.int_lines(utils.data_file(day=1))
     print(f"Part 1: {count_increasing_windows(puzzle_input, length=1)}")
     print(f"Part 2: {count_increasing_windows(puzzle_input, length=3)}")
