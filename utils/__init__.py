@@ -1,9 +1,7 @@
 
-from . import read
+from .read import parse_lines
+from .data import data_file
 
-_PUZZLE_INPUT_FILE = "data/day{}.txt"
 
-
-def data_file(day):
-    """Location of the puzzle input file for `day`, relative to the year directory."""
-    return _PUZZLE_INPUT_FILE.format(day)
+def parse_lines_for_day(day, parser=str):
+    return parse_lines(data_file(day), parser)
