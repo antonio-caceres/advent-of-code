@@ -64,5 +64,5 @@ if __name__ == "__main__":
         sub_one.naive_move(inst)
         sub_two.move(inst)
 
-    print(f"Part 1: {sub_one.horiz * sub_one.depth}")
-    print(f"Part 2: {sub_two.horiz * sub_two.depth}")
+    print(f"Part One: {sub_one.horiz * sub_one.depth}")
+    print(f"Part Two: {sub_two.horiz * sub_two.depth}")
