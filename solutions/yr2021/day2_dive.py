@@ -6,63 +6,63 @@ from enum import Enum
 import utils
 
 
-@dataclass
-class Position:
-    horiz: int = 0
-    depth: int = 0
-    aim: int | None = 0
-
-    def __iter__(self):
-        yield from [self.horiz, self.depth]
-
-
-class Directions(Enum):
+class Direction(Enum):
     FORWARD = "forward"
     DOWN = "down"
     UP = "up"
 
 
-def _parse_instructions(lines):
-    instructs = []
-    for line in lines:
-        instruct, val = line.split()
-        instructs.append((Directions(instruct), int(val)))
-    return instructs
+@dataclass
+class Instruction:
+    dir: Direction
+    val: int
+
+    @classmethod
+    def from_input_line(cls, line):
+        instruct, val = line.split(' ')
+        return cls(Direction(instruct), int(val))
 
 
-def calc_position(instructs):
-    pos = Position(aim=None)
-    for direction, val in instructs:
-        match direction:
-            case Directions.FORWARD:
-                pos.horiz += val
+@dataclass
+class Submarine:
+    horiz: int = 0
+    depth: int = 0
+    aim: int = 0
+
+    def __iter__(self):
+        yield from [self.horiz, self.depth]
+
+    def naive_move(self, inst):
+        """Move the submarine without accounting for aiming."""
+        match inst.dir:
+            case Direction.FORWARD:
+                self.horiz += inst.val
             # for "up" and "down", submarine depth is inverted/negated
-            case Directions.UP:
-                pos.depth -= val
-            case Directions.DOWN:
-                pos.depth += val
-    return pos
+            case Direction.UP:
+                self.depth -= inst.val
+            case Direction.DOWN:
+                self.depth += inst.val
 
-
-def calc_aimed_position(instructs):
-    pos = Position()
-    for direction, val in instructs:
-        match direction:
-            case Directions.FORWARD:
-                pos.horiz += val
-                pos.depth += pos.aim * val
-            # for "up" and "down", submarine aim is inverted/negated
-            case Directions.UP:
-                pos.aim -= val
-            case Directions.DOWN:
-                pos.aim += val
-    return pos
+    def move(self, inst):
+        """Move the submarine."""
+        match inst.dir:
+            case Direction.FORWARD:
+                self.horiz += inst.val
+                self.depth += self.aim * inst.val
+            # for "up" and "down", submarine depth is inverted/negated
+            case Direction.UP:
+                self.aim -= inst.val
+            case Direction.DOWN:
+                self.aim += inst.val
 
 
 if __name__ == "__main__":
-    with open(utils.data_file(day=2)) as f:
-        dive_instructs = _parse_instructions(f.readlines())
+    instructions = utils.parse_lines_for_day(day=2, parser=Instruction.from_input_line)
 
-    for part, func in [("1", calc_position), ("2", calc_aimed_position)]:
-        horiz, depth = func(dive_instructs)
-        print(f"Part {part}: {horiz * depth}")
+    sub_one, sub_two = Submarine(), Submarine()
+    for inst in instructions:
+        sub_one.naive_move(inst)
+        sub_two.move(inst)
+
+    print(f"Part 1: {sub_one.horiz * sub_one.depth}")
+    print(f"Part 2: {sub_two.horiz * sub_two.depth}")
