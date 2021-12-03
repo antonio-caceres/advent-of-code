@@ -18,7 +18,7 @@ class Instruction:
     val: int
 
     @classmethod
-    def from_input_line(cls, line):
+    def from_data_line(cls, line):
         instruct, val = line.split(' ')
         return cls(Direction(instruct), int(val))
 
@@ -57,7 +57,7 @@ class Submarine:
 
 
 if __name__ == "__main__":
-    instructions = utils.parse_lines_for_day(day=2, parser=Instruction.from_input_line)
+    instructions = utils.parse_dayta(day=2, line_parser=Instruction.from_data_line)
 
     sub_one, sub_two = Submarine(), Submarine()
     for inst in instructions:

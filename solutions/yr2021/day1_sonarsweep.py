@@ -26,6 +26,6 @@ def count_increasing_windows(nums, length):
 
 
 if __name__ == "__main__":
-    puzzle_input = utils.parse_lines_for_day(day=1, parser=int)
+    puzzle_input = utils.parse_dayta(day=1, line_parser=int)
     print(f"Part 1: {count_increasing_windows(puzzle_input, length=1)}")
     print(f"Part 2: {count_increasing_windows(puzzle_input, length=3)}")
