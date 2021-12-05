@@ -51,7 +51,7 @@ def win_bingo(nums, boards):
 def lose_bingo(nums, boards):
     """Find the bingo board that loses last and the number that causes the bingo.
 
-    Break ties using the order of ``boards``, choosing the last board in ``boards``..
+    Break ties using the order of ``boards``, choosing the last board in ``boards``.
     """
     winning_order = []
     for num in nums:

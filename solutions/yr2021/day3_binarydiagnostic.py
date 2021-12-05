@@ -29,7 +29,7 @@ def bools_to_int(bools):
     return result
 
 
-def most_frequent_bools(bool_lists, tie_val = None):
+def most_frequent_bools(bool_lists, tie_val=None):
     """Get the most frequent booleans per position from arrays of booleans.
 
     Args:
