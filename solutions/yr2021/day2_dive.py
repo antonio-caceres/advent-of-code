@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from enum import Enum
 
-import utils
+from utils import read
 
 
 class Direction(Enum):
@@ -57,7 +57,7 @@ class Submarine:
 
 
 if __name__ == "__main__":
-    instructions = utils.parse_dayta(day=2, line_parser=Instruction.from_data_line)
+    instructions = read.dayta(day=2, line_parser=Instruction.from_data_line)
 
     sub_one, sub_two = Submarine(), Submarine()
     for inst in instructions:
