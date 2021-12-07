@@ -8,7 +8,7 @@ def lines(file_name, parser=str):
 
     Strips new lines from the end."""
     with open(file_name) as f:
-        # remove new lines using splitlines
+        # remove '\n' from lines using splitlines
         return [parser(line) for line in f.read().splitlines(keepends=False)]
 
 
