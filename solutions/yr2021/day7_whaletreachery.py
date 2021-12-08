@@ -1,5 +1,6 @@
 """Day 7: The Treachery of Whales"""
 
+import math
 from collections import Counter
 
 from utils import read
@@ -45,13 +46,20 @@ def min_scaling_distance(nums):
     if len(nums) == 0:
         return 0
 
-    min_distance = 0
-    min_center = round(sum(nums) / len(nums) - 0.25)
-    for num in nums:
-        dist = abs(num - min_center)
+    def scaling_distance(dist):
         # (dist + 1) * dist is always even because even * odd (floor div is just converting to int)
-        min_distance += ((dist + 1) * dist) // 2
-    return min_distance
+        return ((dist + 1) * dist) // 2
+
+    min_dist_floor, min_dist_ceil = 0, 0
+    min_center = sum(nums) / len(nums) - 0.25
+    min_floor, min_ceil = math.floor(min_center), math.ceil(min_center)
+    for num in nums:
+        dist_floor = abs(num - min_floor)
+        dist_ceil = abs(num - min_ceil)
+        min_dist_floor += scaling_distance(dist_floor)
+        min_dist_ceil += scaling_distance(dist_ceil)
+
+    return min(min_dist_floor, min_dist_ceil)
 
 
 if __name__ == "__main__":
