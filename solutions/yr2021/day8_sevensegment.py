@@ -34,11 +34,13 @@ def _display_step_one(patterns, digit_mapping):
                 digit_mapping[8] = pattern
 
 
+STEP_TWO_KNOWN = [1, 4, 7, 8]
+
+
 def _display_step_two(patterns, digit_mapping):
     """Deduce patterns (2, 3, 6, 9) using set operation strategies with known patterns (1, 4, 7, 8)."""
-    known_patterns = [1, 4, 7, 8]
-    if None in {digit_mapping[x] for x in known_patterns}:
-        raise ValueError(f"digits {known_patterns} did not all have valid patterns")
+    if None in {digit_mapping[x] for x in STEP_TWO_KNOWN}:
+        raise ValueError(f"digits {STEP_TWO_KNOWN} did not all have valid patterns")
 
     for pattern in patterns:
         if len(pattern) == 5:  # possibly 2, 3, 5
@@ -53,11 +55,13 @@ def _display_step_two(patterns, digit_mapping):
                 digit_mapping[9] = pattern
 
 
+STEP_THREE_KNOWN = [1, 2, 3, 4, 6, 7, 8, 9]
+
+
 def _display_step_three(patterns, digit_mapping):
     """Deduce patterns (0, 5) using process of elimination and known patterns ."""
-    known_patterns = [1, 2, 3, 4, 6, 7, 8, 9]
-    if None in {digit_mapping[x] for x in known_patterns}:
-        raise ValueError(f"digits {known_patterns} did not all have valid patterns")
+    if None in {digit_mapping[x] for x in STEP_THREE_KNOWN}:
+        raise ValueError(f"digits {STEP_THREE_KNOWN} did not all have valid patterns")
 
     for pattern in patterns:
         if pattern not in digit_mapping:
@@ -95,7 +99,7 @@ def digit_segment_mapping(patterns):
     if len(patterns) != 10:
         raise ValueError(f"number of unique patterns was not 10: {len(patterns)}")
 
-    digit_mapping = [None] * 10
+    digit_mapping = [None] * 10  # none of the patterns are known
     _display_step_one(patterns, digit_mapping)
     _display_step_two(patterns, digit_mapping)
     _display_step_three(patterns, digit_mapping)
@@ -126,7 +130,6 @@ def patterns_to_int(mapping, patterns):
     """Convert an iterable of seven-segment digit patterns into an integer.
 
     The first pattern in the iterable is the first digit in the integer, etc.
-
 
     Args:
         mapping: 10-length list mapping from digit segment patterns to digits
