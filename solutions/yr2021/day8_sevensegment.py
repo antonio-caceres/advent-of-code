@@ -46,28 +46,16 @@ def _display_step_two(patterns, digit_mapping):
         if len(pattern) == 5:  # possibly 2, 3, 5
             if pattern | digit_mapping[4] == digit_mapping[8]:
                 digit_mapping[2] = pattern
-            if pattern & digit_mapping[7] == digit_mapping[7]:  # pattern contains all of 7
+            elif pattern & digit_mapping[7] == digit_mapping[7]:  # pattern contains all of 7
                 digit_mapping[3] = pattern
+            else:
+                digit_mapping[5] = pattern
         if len(pattern) == 6:  # possibly 0, 6, 9
             if pattern | digit_mapping[1] == digit_mapping[8]:  # pattern + 1 -> 8
                 digit_mapping[6] = pattern
-            if pattern & digit_mapping[4] == digit_mapping[4]:  # pattern contains all of 4
+            elif pattern & digit_mapping[4] == digit_mapping[4]:  # pattern contains all of 4
                 digit_mapping[9] = pattern
-
-
-STEP_THREE_KNOWN = [1, 2, 3, 4, 6, 7, 8, 9]
-
-
-def _display_step_three(patterns, digit_mapping):
-    """Deduce patterns (0, 5) using process of elimination and known patterns ."""
-    if None in {digit_mapping[x] for x in STEP_THREE_KNOWN}:
-        raise ValueError(f"digits {STEP_THREE_KNOWN} did not all have valid patterns")
-
-    for pattern in patterns:
-        if pattern not in digit_mapping:
-            if len(pattern) == 5:
-                digit_mapping[5] = pattern
-            if len(pattern) == 6:
+            else:
                 digit_mapping[0] = pattern
 
 
@@ -102,7 +90,6 @@ def digit_segment_mapping(patterns):
     digit_mapping = [None] * 10  # none of the patterns are known
     _display_step_one(patterns, digit_mapping)
     _display_step_two(patterns, digit_mapping)
-    _display_step_three(patterns, digit_mapping)
 
     return digit_mapping
 
