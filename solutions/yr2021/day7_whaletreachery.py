@@ -1,7 +1,7 @@
 """Day 7: The Treachery of Whales"""
 
-import math
 from collections import Counter
+import math
 
 from utils import read
 
