@@ -4,27 +4,7 @@ import heapq
 
 import numpy as np
 
-from utils import read
-
-
-def adjacent_indices(index, shape):
-    """Iterate over all the valid adjacent indices of a given index within a given array shape.
-
-    Does not check that index is a valid index for shape.
-    """
-    for dim, dim_size in enumerate(shape):
-        if index[dim] > 0:
-            yield *index[:dim], index[dim] - 1, *index[dim+1:]
-        if index[dim] < dim_size - 1:
-            yield *index[:dim], index[dim] + 1, *index[dim+1:]
-
-
-def is_local_min(nums, index):
-    """If the index is a local minimum of the array ``nums``.
-
-    Considers the (``dim * 2``) adjacent heights, where ``dim`` is the dimension of ``heightmap``
-    """
-    return all((nums[index] < nums[adjacent] for adjacent in adjacent_indices(index, nums.shape)))
+from utils import arr, read
 
 
 def sum_risk_levels(heightmap):
@@ -35,7 +15,7 @@ def sum_risk_levels(heightmap):
     """
     risk_level_sum = 0
     for index, height in np.ndenumerate(heightmap):
-        if is_local_min(heightmap, index):
+        if arr.is_local_min(heightmap, index):
             risk_level_sum += height + 1
     return risk_level_sum
 
@@ -70,7 +50,7 @@ def basin_size(heightmap, index):
         if (cur := index_queue.pop()) in visited:
             continue
         visited.add(cur)
-        for adjacent in adjacent_indices(cur, heightmap.shape):
+        for adjacent in arr.adjacent(cur, heightmap.shape):
             if heightmap[cur] <= heightmap[adjacent] <= MAX_FLOW_HEIGHT:
                 index_queue.append(adjacent)
 
@@ -94,7 +74,7 @@ def multiply_large_risk_basins(heightmap, n_largest=None):
     """
     largest_sizes = []
     for index, height in np.ndenumerate(heightmap):
-        if is_local_min(heightmap, index):
+        if arr.is_local_min(heightmap, index):
             risk_basin_size = basin_size(heightmap, index)
             if n_largest is not None and len(largest_sizes) == n_largest:
                 heapq.heappushpop(largest_sizes, risk_basin_size)
