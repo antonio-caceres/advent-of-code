@@ -75,7 +75,7 @@ class LanternfishSim:
 
 
 if __name__ == "__main__":
-    parsed_lines = read.dayta(day=6, line_parser=lambda line: [int(x) for x in line.split(",")])
+    parsed_lines = read.dayta(day=6, line_parser=read.iter_parser(int, ","))
     for init_lanternfish in parsed_lines:
         simulation = LanternfishSim.from_fish_cycles(init_lanternfish, birth_cycle=7, growth_cycle=2)
         time_steps_a = 80

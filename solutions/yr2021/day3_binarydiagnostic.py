@@ -130,6 +130,6 @@ def life_support(bool_lists):
 
 
 if __name__ == "__main__":
-    binary_report = read.dayta(day=3, line_parser=lambda s: [bool(int(c)) for c in s])
+    binary_report = read.dayta(day=3, line_parser=read.iter_parser(lambda c: bool(int(c))))
     print(f"Part One: {power_consumption(binary_report)}")
     print(f"Part Two: {life_support(binary_report)}")

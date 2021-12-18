@@ -84,7 +84,7 @@ def multiply_large_risk_basins(heightmap, n_largest=None):
 
 
 if __name__ == "__main__":
-    cave_height_lists = read.dayta(day=9, line_parser=lambda line: [int(num) for num in line])
+    cave_height_lists = read.dayta(day=9, line_parser=read.iter_parser(int))
     cave_heights = np.array(cave_height_lists)
     print(f"Part One: {sum_risk_levels(cave_heights)}")
     print(f"Part Two: {multiply_large_risk_basins(cave_heights, n_largest=3)}")
