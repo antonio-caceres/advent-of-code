@@ -93,5 +93,5 @@ def num_discrete_overlaps(line_segments):
 if __name__ == "__main__":
     segments = read.dayta(day=5, line_parser=DiscreteLineSegment.from_puzzle_line)
     horiz_vert_segments = [seg for seg in segments if seg.is_horizontal() or seg.is_vertical()]
-    print(f"Part 1: {num_discrete_overlaps(horiz_vert_segments)}")
-    print(f"Part 2: {num_discrete_overlaps(segments)}")
+    print(f"Part One: {num_discrete_overlaps(horiz_vert_segments)}")
+    print(f"Part Two: {num_discrete_overlaps(segments)}")

@@ -80,8 +80,8 @@ if __name__ == "__main__":
         simulation = LanternfishSim.from_fish_cycles(init_lanternfish, birth_cycle=7, growth_cycle=2)
         time_steps_a = 80
         simulation.simulate(time_steps=time_steps_a)
-        print(f"Part 1: {simulation.num_fish}")
+        print(f"Part One: {simulation.num_fish}")
         time_steps_b = 256
         simulation.simulate(time_steps=time_steps_b-time_steps_a)
-        print(f"Part 2: {simulation.num_fish}")
+        print(f"Part Two: {simulation.num_fish}")
 

@@ -65,5 +65,5 @@ def min_scaling_distance(nums):
 if __name__ == "__main__":
     parsed_lines = read.dayta(day=7, line_parser=lambda line: [int(x) for x in line.split(",")])
     for crab_locs in parsed_lines:
-        print(f"Part 1: {min_abs_distance(crab_locs)}")
-        print(f"Part 2: {min_scaling_distance(crab_locs)}")
+        print(f"Part One: {min_abs_distance(crab_locs)}")
+        print(f"Part Two: {min_scaling_distance(crab_locs)}")

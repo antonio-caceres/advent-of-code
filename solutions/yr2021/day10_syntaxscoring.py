@@ -114,5 +114,5 @@ def median_incomplete_score(bracket_strings):
 
 if __name__ == "__main__":
     puzzle_strings = read.dayta(day=10)
-    print(f"Part 1: {sum_corrupted_errors(puzzle_strings)}")
-    print(f"Part 2: {median_incomplete_score(puzzle_strings)}")
+    print(f"Part One: {sum_corrupted_errors(puzzle_strings)}")
+    print(f"Part Two: {median_incomplete_score(puzzle_strings)}")

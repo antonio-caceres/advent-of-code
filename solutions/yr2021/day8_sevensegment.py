@@ -141,5 +141,5 @@ if __name__ == "__main__":
         line_mapping = digit_segment_mapping(line_patterns)
         num_simple_digits += count_digit_patterns(line_mapping, line_outputs, simple_digits)
         sum_puzzle_patterns += patterns_to_int(line_mapping, line_outputs)
-    print(f"Part 1: {num_simple_digits}")
-    print(f"Part 2: {sum_puzzle_patterns}")
+    print(f"Part One: {num_simple_digits}")
+    print(f"Part Two: {sum_puzzle_patterns}")

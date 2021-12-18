@@ -89,5 +89,5 @@ if __name__ == "__main__":
     with open(utils.data_file(day=4)) as f:
         bingo_nums, bingo_boards = parse_bingo(f.read())
 
-    print(f"Part 1: {squid_score(*win_bingo(bingo_nums, bingo_boards))}")
-    print(f"Part 2: {squid_score(*lose_bingo(bingo_nums, bingo_boards))}")
+    print(f"Part One: {squid_score(*win_bingo(bingo_nums, bingo_boards))}")
+    print(f"Part Two: {squid_score(*lose_bingo(bingo_nums, bingo_boards))}")
