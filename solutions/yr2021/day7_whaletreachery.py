@@ -1,4 +1,4 @@
-"""Day 7: The Treachery of Whales"""
+"""(2021) Day 7: The Treachery of Whales"""
 
 from collections import Counter
 import math

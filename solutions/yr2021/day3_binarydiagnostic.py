@@ -1,4 +1,4 @@
-"""Day 3: Binary Diagnostic"""
+"""(2021) Day 3: Binary Diagnostic"""
 
 from dataclasses import dataclass
 

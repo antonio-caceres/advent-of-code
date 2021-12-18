@@ -1,4 +1,4 @@
-"""Day 2: Dive!"""
+"""(2021) Day 2: Dive!"""
 
 from dataclasses import dataclass
 from enum import Enum

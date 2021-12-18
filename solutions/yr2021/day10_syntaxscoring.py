@@ -1,4 +1,4 @@
-"""Day 10: Syntax Scoring"""
+"""(2021) Day 10: Syntax Scoring"""
 
 from enum import Enum
 

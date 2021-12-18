@@ -1,4 +1,4 @@
-"""Day 6: Lanternfish"""
+"""(2021) Day 6: Lanternfish"""
 
 from collections import deque, Counter
 
