@@ -73,7 +73,7 @@ def power_consumption(bool_lists):
     return bools_to_int(gamma_list) * bools_to_int(epsilon_list)
 
 
-def filtered_frequent_bool(bool_lists, tie_val=None, least_frequent=False):
+def filtered_frequent_bool(bool_lists, tie_val=None, least_freq=False):
     """Return a boolean list using the positional bit frequency counts and a filter.
 
     Given a list of boolean lists, count the most frequent bool in the first position.
@@ -85,7 +85,7 @@ def filtered_frequent_bool(bool_lists, tie_val=None, least_frequent=False):
     Args:
         bool_lists: list[list[bool]], boolean lists to generate the frequency string from
         tie_val: default bool to use in the case of a frequency tie
-        least_frequent: if the least frequent bit should be used instead
+        least_freq: if the least frequent bit should be used instead
 
     Returns:
         binary string according to the algorithm above
@@ -99,7 +99,7 @@ def filtered_frequent_bool(bool_lists, tie_val=None, least_frequent=False):
     match len(filtered[False]), len(filtered[True]):
         case 0, 0:
             return []
-        # if there are no numbers for a given boolean, use the other
+        # if there are no numbers for a given boolean, use the other boolean
         case 0, _:
             result_bool = True
         case _, 0:
@@ -107,11 +107,11 @@ def filtered_frequent_bool(bool_lists, tie_val=None, least_frequent=False):
         case len_false, len_true if len_false == len_true:
             result_bool = tie_val
         case len_false, len_true:
-            result_bool = (len_false < len_true) ^ least_frequent
+            result_bool = (len_false < len_true) ^ least_freq
 
     # noinspection PyUnboundLocalVariable
     # Pycharm is not smart enough at pattern matching (yet).
-    return [result_bool] + filtered_frequent_bool(filtered[result_bool], tie_val, least_frequent)
+    return [result_bool] + filtered_frequent_bool(filtered[result_bool], tie_val, least_freq)
 
 
 def life_support(bool_lists):
@@ -119,13 +119,13 @@ def life_support(bool_lists):
 
     The life support rating is the product of oxygen generator and CO2 scrubber ratings.
     Both are calculated according to the algorithm run by ``filtered_frequent_bool``,
-    where the oxygen generator rating has ``tie_val = True`` and ``least_frequent == False``,
-    and the CO2 scrubber rating has ``tie_val = False`` and ``least_frequent == True``.
+    where the oxygen generator rating has ``tie_val = True`` and ``least_freq == False``,
+    and the CO2 scrubber rating has ``tie_val = False`` and ``least_freq == True``.
 
     The values are then treated as big-endian numbers, and multiplied to get the life support rating.
     """
-    oxygen_rating = bools_to_int(filtered_frequent_bool(bool_lists, tie_val=True, least_frequent=False))
-    co2_rating = bools_to_int(filtered_frequent_bool(bool_lists, tie_val=False, least_frequent=True))
+    oxygen_rating = bools_to_int(filtered_frequent_bool(bool_lists, tie_val=True, least_freq=False))
+    co2_rating = bools_to_int(filtered_frequent_bool(bool_lists, tie_val=False, least_freq=True))
     return oxygen_rating * co2_rating
 
 
