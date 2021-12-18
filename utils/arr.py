@@ -19,5 +19,3 @@ def is_local_min(array, index):
     Considers the (``dim * 2``) adjacent indices, where ``dim`` is the dimension of ``array``.
     """
     return all((array[index] < array[adj_idx] for adj_idx in adjacent(index, array.shape)))
-
-
