@@ -1,21 +1,82 @@
 """Array utility functions."""
 
+import itertools
 
-def adjacent(index, shape):
-    """Iterate over the valid adjacent indices of ``index``, within the array shape.
 
-    Does not check that index is a valid index for shape.
+def adjacent(index, shape, max_deltas=None, include_index=False):
+    """Iterate over valid adjacent indices of ``index``, within the given array shape.
+
+    Does not check if the given index is invalid for the array shape.
+    This is because indices just outside the shape could still yield useful results.
+
+    Adjacent indices are indices that are different by exactly 1 from ``index``
+    in 1 or more dimensions (0 or more dimensions if ``include_index`` is ``True``).
+
+    Args:
+        index: Tuple of integers that index each dimension of the array.
+        shape: Tuple with the length of each dimension of the array.
+        max_deltas: Constrains which indices are considered adjacent.
+            Represents the maximum number of dimensions in which the adjacent index can be
+            different from ``index`` and still be considered adjacent.
+            If ``None``, ``max_deltas`` is set to the length of ``shape``,
+            i.e., the number of dimensions of the target array.
+            If ``max_deltas`` is ``len(shape) - n``, then an adjacent index must
+            be the same in at least ``n`` dimensions to be considered adjacent.
+            E.g., if ``max_deltas`` is 1, only directly adjacent indices are considered
+            adjacent (no diagonal indices are considered).
+        include_index: If ``index`` should be considered adjacent to itself.
+
+    Returns:
+        Iterator over all the adjacent indices of ``index`` within ``shape``.
     """
-    for dim, dim_size in enumerate(shape):
-        if index[dim] > 0:
-            yield *index[:dim], index[dim] - 1, *index[dim+1:]
-        if index[dim] < dim_size - 1:
-            yield *index[:dim], index[dim] + 1, *index[dim+1:]
+    if len(index) != len(shape):
+        raise ValueError(f"index and array shape have different dimensions: "
+                         f"{len(index)} != {len(shape)}")
+    if max_deltas is None:
+        max_deltas = len(shape)
+
+    for deltas in itertools.product([-1, 0, 1], repeat=len(shape)):
+        num_diff_dims = len(shape) - deltas.count(0)
+
+        if (num_diff_dims == 0 and not include_index) or (num_diff_dims > max_deltas):
+            # not considered as an adjacent index
+            continue
+
+        adj_coords = tuple(coord + delta for coord, delta in zip(index, deltas))
+        if all(0 <= coord < dim_shape for coord, dim_shape in zip(adj_coords, shape)):
+            # the adjacent coordinates are valid
+            yield adj_coords
 
 
-def is_local_min(array, index):
-    """If the index is a local minimum of the array ``array``.
+_COMPARISON_FUNCS = {
+    "<": lambda a, b: a < b,
+    "<=": lambda a, b: a <= b,
+    ">": lambda a, b: a > b,
+    ">=": lambda a, b: a >= b,
+}
 
-    Considers the (``dim * 2``) adjacent indices, where ``dim`` is the dimension of ``array``.
+
+def _adj_comparison(array, index, comparison, max_deltas=None):
+    """Perform a comparison between a value in an array and its adjacent values."""
+    compare = _COMPARISON_FUNCS[comparison]
+    return all(compare(array[index], array[adj]) for adj in adjacent(index, array.shape, max_deltas))
+
+
+def is_local_min(array, index, equality=False, max_deltas=None):
+    """If ``index`` is a local minimum of ``array``.
+
+    ``equality`` clarifies if an index should be a local minimum even if it is equal to adjacent indices.
+    ``max_deltas`` constrains which adjacent indices are considered, as described by ``arr.adjacent``.
     """
-    return all((array[index] < array[adj_idx] for adj_idx in adjacent(index, array.shape)))
+    comparison = "<=" if equality else "<"
+    return _adj_comparison(array, index, comparison, max_deltas)
+
+
+def is_local_max(array, index, equality=False, max_deltas=None):
+    """If ``index`` is a local maximum of ``array``.
+
+    ``equality`` clarifies if an index should be a local maximum even if it is equal to adjacent indices.
+    ``max_deltas`` constrains which adjacent indices are considered, as described by ``arr.adjacent``.
+    """
+    comparison = ">=" if equality else ">"
+    return _adj_comparison(array, index, comparison, max_deltas)
