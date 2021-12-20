@@ -4,7 +4,7 @@ from collections import defaultdict
 
 import numpy as np
 
-import utils
+from utils import read
 
 
 class BingoBoard:
@@ -86,7 +86,7 @@ def parse_bingo(contents):
 
 
 if __name__ == "__main__":
-    with open(utils.data_file(day=4)) as f:
+    with read.data_file(day=4) as f:
         bingo_nums, bingo_boards = parse_bingo(f.read())
 
     print(f"Part One: {squid_score(*win_bingo(bingo_nums, bingo_boards))}")
