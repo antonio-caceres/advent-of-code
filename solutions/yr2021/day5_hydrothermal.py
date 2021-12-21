@@ -30,7 +30,7 @@ class DiscreteLineSegment:
     all the y-coordinates must also be integer-valued.
 
     Attributes:
-        x_range: Range of x-coordinates from the lowest to highest value.
+        x_range: Range of x-coordinates from lowest to highest value.
         y_range: Range of y-coordinates that map to the range of x-coordinates.
     """
     x_range: Sequence[int]
