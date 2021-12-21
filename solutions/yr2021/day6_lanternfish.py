@@ -1,6 +1,7 @@
 """(2021) Day 6: Lanternfish"""
 
-from collections import deque, Counter
+# noinspection PyPep8Naming
+from collections import deque as Deque, Counter
 
 from utils import read
 
@@ -15,8 +16,8 @@ class LanternfishSim:
 
     For additional information, see attribute getter documentation.
     """
-    _adult_fish: deque[int]
-    _baby_fish: deque[int]
+    _adult_fish: Deque[int]
+    _baby_fish: Deque[int]
     _birth_cycle: int
     _growth_cycle: int
 
@@ -32,8 +33,8 @@ class LanternfishSim:
                 i.e. after being born, a fish takes ``birth_cycle + growth_cycle`` time steps to reproduction
         """
         self._birth_cycle, self._growth_cycle = birth_cycle, growth_cycle
-        self._adult_fish = deque(cycle_dist[:birth_cycle], maxlen=birth_cycle)
-        self._baby_fish = deque(cycle_dist[birth_cycle:birth_cycle + growth_cycle], maxlen=growth_cycle)
+        self._adult_fish = Deque(cycle_dist[:birth_cycle], maxlen=birth_cycle)
+        self._baby_fish = Deque(cycle_dist[birth_cycle:birth_cycle + growth_cycle], maxlen=growth_cycle)
 
     @classmethod
     def from_fish_cycles(cls, fish_cycles: list[int], birth_cycle: int, growth_cycle: int):
@@ -84,4 +85,3 @@ if __name__ == "__main__":
         time_steps_b = 256
         simulation.simulate(time_steps=time_steps_b-time_steps_a)
         print(f"Part Two: {simulation.num_fish}")
-

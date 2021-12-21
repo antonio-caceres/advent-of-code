@@ -1,6 +1,7 @@
 """(2021) Day 4: Giant Squid"""
 
-from collections import defaultdict
+# noinspection PyPep8Naming
+from collections import defaultdict as DefaultDict
 
 import numpy as np
 
@@ -13,7 +14,7 @@ class BingoBoard:
     winning: bool
 
     def __init__(self, board):
-        self.board = defaultdict(list)
+        self.board = DefaultDict(list)
 
         if not all(len(board) == len(row) for row in board):
             raise ValueError(f"board is not a square matrix")

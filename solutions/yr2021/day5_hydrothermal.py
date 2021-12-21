@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from collections import defaultdict
+# noinspection PyPep8Naming
+from collections import defaultdict as DefaultDict
 from dataclasses import dataclass
 from typing import Sequence
 
@@ -80,7 +81,7 @@ def num_discrete_overlaps(line_segments):
     From an iterable of line segments, return the number of discrete/integer-valued
     points that are contained in more than one of the line segments.
     """
-    point_ct = defaultdict(int)
+    point_ct = DefaultDict(int)
     num_overlaps = 0
     for line_segment in line_segments:
         for pt in line_segment.integer_pts():
