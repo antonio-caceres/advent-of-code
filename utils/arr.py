@@ -1,9 +1,16 @@
 """Array utility functions."""
 
+from enum import Enum
+from typing import Iterable
 import itertools
 
+from numpy.typing import NDArray
 
-def adjacent(index, shape, max_deltas=None, include_index=False):
+
+def adjacent(index: tuple[int],
+             shape: tuple[int],
+             max_deltas: int | None = None,
+             include_index: bool = False) -> Iterable[tuple[int]]:
     """Iterate over valid adjacent indices of ``index``, within the given array shape.
 
     Does not check if the given index is invalid for the array shape.
@@ -48,35 +55,46 @@ def adjacent(index, shape, max_deltas=None, include_index=False):
             yield adj_coords
 
 
-_COMPARISON_FUNCS = {
-    "<": lambda a, b: a < b,
-    "<=": lambda a, b: a <= b,
-    ">": lambda a, b: a > b,
-    ">=": lambda a, b: a >= b,
-}
+class _Comparisons(Enum):
+    LT = "<"
+    LT_EQ = "<="
+    GT = ">"
+    GT_EQ = ">="
+
+    def compare(self, a, b):
+        match self:
+            case self.LT:
+                return a < b
+            case self.LT_EQ:
+                return a <= b
+            case self.GT:
+                return a > b
+            case self.GT_EQ:
+                return a >= b
 
 
-def _adj_comparison(array, index, comparison, max_deltas=None):
+def _adj_comparison(array: NDArray,
+                    index: tuple[int],
+                    comparison: _Comparisons,
+                    max_deltas: int | None = None):
     """Perform a comparison between a value in an array and its adjacent values."""
-    compare = _COMPARISON_FUNCS[comparison]
-    return all(compare(array[index], array[adj]) for adj in adjacent(index, array.shape, max_deltas))
+    adj_indices = adjacent(index, array.shape, max_deltas)
+    return all(comparison.compare(array[index], array[adj]) for adj in adj_indices)
 
 
-def is_local_min(array, index, equality=False, max_deltas=None):
-    """If ``index`` is a local minimum of ``array``.
-
-    ``equality`` clarifies if an index should be a local minimum even if it is equal to adjacent indices.
-    ``max_deltas`` constrains which adjacent indices are considered, as described by ``arr.adjacent``.
-    """
-    comparison = "<=" if equality else "<"
+def is_local_min(array: NDArray,
+                 index: tuple[int],
+                 equality: bool = False,
+                 max_deltas: int | None = None):
+    """If ``index`` is a local minimum (> adjacent indices, or >= if ``equality) of ``array``."""
+    comparison = _Comparisons.LT_EQ if equality else _Comparisons.LT
     return _adj_comparison(array, index, comparison, max_deltas)
 
 
-def is_local_max(array, index, equality=False, max_deltas=None):
-    """If ``index`` is a local maximum of ``array``.
-
-    ``equality`` clarifies if an index should be a local maximum even if it is equal to adjacent indices.
-    ``max_deltas`` constrains which adjacent indices are considered, as described by ``arr.adjacent``.
-    """
-    comparison = ">=" if equality else ">"
+def is_local_max(array: NDArray,
+                 index: tuple[int],
+                 equality: bool = False,
+                 max_deltas: int | None = None):
+    """If ``index`` is a local maximum (> adjacent indices, or >= if ``equality) of ``array``."""
+    comparison = _Comparisons.GT_EQ if equality else _Comparisons.GT
     return _adj_comparison(array, index, comparison, max_deltas)

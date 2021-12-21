@@ -1,20 +1,22 @@
 """For reading Advent of Code's puzzle input files into data structures."""
 
+from typing import Any, Callable
+
 _PUZZLE_INPUT_FILE = "data/day{}.txt"
 
 
-def data_file(day):
+def data_file(day: int):
     """Puzzle input file object for `day`."""
     return open(_PUZZLE_INPUT_FILE.format(day))
 
 
-def dayta(day, line_parser=str):
+def dayta(day: int, line_parser: Callable[[str], Any] = str):
     """Parse the lines (with stripped '\n') from a data file for a given day."""
     with data_file(day) as f:
         return [line_parser(line) for line in f.read().splitlines(keepends=False)]
 
 
-def iter_parser(parser=str, sep=None):
+def iter_parser(parser: Callable[[str], Any] = str, sep: str | None = None):
     """Return a line parsing function that splits and parses a string into a list.
 
     Built to easily create list-comprehension parsers for use with ``read.lines``.
