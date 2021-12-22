@@ -11,30 +11,30 @@ def adjacent(index: tuple[int],
              shape: tuple[int],
              max_deltas: int | None = None,
              include_index: bool = False) -> Iterable[tuple[int]]:
-    """Iterate over valid adjacent indices of ``index``, within the given array shape.
+    """Iterate over valid adjacent indices of `index`, within the given array shape.
 
-    Does not check if the given index is invalid for the array shape.
-    This is because indices just outside the shape could still yield useful results.
+    Does not fail if `index` is an invalid index of `shape`.
+    This is because indices just outside the array shape could still yield useful results.
 
-    Adjacent indices are indices that are different by exactly 1 from ``index``
-    in 1 or more dimensions (0 or more dimensions if ``include_index`` is ``True``).
+    Adjacent indices are indices that are different by exactly 1 from `index` in 1 or more dimensions
+    (0 or more dimensions if `include_index` is ``True``).
 
     Args:
-        index: Tuple of integers that index each dimension of the array.
-        shape: Tuple with the length of each dimension of the array.
-        max_deltas: Constrains which indices are considered adjacent.
-            Represents the maximum number of dimensions in which the adjacent index can be
-            different from ``index`` and still be considered adjacent.
-            If ``None``, ``max_deltas`` is set to the length of ``shape``,
-            i.e., the number of dimensions of the target array.
-            If ``max_deltas`` is ``len(shape) - n``, then an adjacent index must
-            be the same in at least ``n`` dimensions to be considered adjacent.
-            E.g., if ``max_deltas`` is 1, only directly adjacent indices are considered
-            adjacent (no diagonal indices are considered).
-        include_index: If ``index`` should be considered adjacent to itself.
+        index (tuple[int]): Index of an array, where each integer indexes each array dimension.
+        shape (tuple[int]): Dimensions of the target array.
+        max_deltas (int | None): Maximum number of dimensions in which an adjacent index can differ from `index`.
+            If ``None``, `max_deltas` is set to the length of `shape`.
+            If 1, for example, only directly adjacent indices,
+            and no diagonal indices, are considered
+            If ``len(shape) - n``, then an adjacent index must be the same  as `index` in
+            at least ``n`` dimensions to be considered adjacent.
+        include_index (bool): If ``index`` should be considered adjacent to itself.
 
-    Returns:
-        Iterator over all the adjacent indices of ``index`` within ``shape``.
+    Yields:
+        Index of an array with the given shape that is adjacent to ``index``.
+
+    Raises:
+        ValueError: If ``index`` is not the same length as ``shape``.
     """
     if len(index) != len(shape):
         raise ValueError(f"index and array shape have different dimensions: "
@@ -56,13 +56,23 @@ def adjacent(index: tuple[int],
 
 
 class _Comparisons(Enum):
+    """Enum class representing the six Python value comparison operators."""
+
+    EQ = "=="
+    NOT_EQ = "!="
     LT = "<"
     LT_EQ = "<="
     GT = ">"
     GT_EQ = ">="
 
     def compare(self, a, b):
+        """Compare two values using the comparison represented by an instance of this class."""
+        # could be replaced with a call to eval, but that hurts readability
         match self:
+            case self.EQ:
+                return a == b
+            case self.NOT_EQ:
+                return a != b
             case self.LT:
                 return a < b
             case self.LT_EQ:
@@ -86,7 +96,7 @@ def is_local_min(array: NDArray,
                  index: tuple[int],
                  equality: bool = False,
                  max_deltas: int | None = None):
-    """If ``index`` is a local minimum (> adjacent indices, or >= if ``equality) of ``array``."""
+    """If `index` is a local minimum (< adjacent indices, or <= if `equality`) of `array`."""
     comparison = _Comparisons.LT_EQ if equality else _Comparisons.LT
     return _adj_comparison(array, index, comparison, max_deltas)
 
@@ -95,6 +105,6 @@ def is_local_max(array: NDArray,
                  index: tuple[int],
                  equality: bool = False,
                  max_deltas: int | None = None):
-    """If ``index`` is a local maximum (> adjacent indices, or >= if ``equality) of ``array``."""
+    """If `index` is a local maximum (> adjacent indices, or >= if `equality`) of `array`."""
     comparison = _Comparisons.GT_EQ if equality else _Comparisons.GT
     return _adj_comparison(array, index, comparison, max_deltas)
