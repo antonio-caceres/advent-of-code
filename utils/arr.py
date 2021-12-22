@@ -1,8 +1,8 @@
 """Array utility functions."""
 
+import itertools
 from enum import Enum
 from typing import Iterable
-import itertools
 
 from numpy.typing import NDArray
 
