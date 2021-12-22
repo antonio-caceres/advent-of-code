@@ -11,11 +11,11 @@ def sum_risk_levels(heightmap):
     """Sum the risk levels of the local minimums in an array of integers.
 
     The risk level of a given height is ``height + 1``.
-    A height is only considered to have a risk level if it is a local minimum of ``heightmap``.
+    A height is only considered to have a risk level if it is a (strict) local minimum of `heightmap`.
     """
     risk_level_sum = 0
     for index, height in np.ndenumerate(heightmap):
-        if arr.is_local_min(heightmap, index, max_deltas=1):
+        if arr.is_local_min(heightmap, index, equality=False, max_deltas=1):
             risk_level_sum += height + 1
     return risk_level_sum
 
@@ -27,21 +27,21 @@ def basin_size(heightmap, index):
     """Find the total number of heightmap indices that "flow downward" to the given index.
 
     A height "flows downward" to itself.
-    If any of the adjacent heights are greater than or equal to the height at ``index``,
+    If any of the adjacent heights are greater than or equal to the height at `index`,
     they are considered to "flow downward" to the index.
-    Any height that is adjacent to a height that "flows downward" to ``index``, with a
+    Any height that is adjacent to a height that "flows downward" to `index`, with a
     height that is greater than or equal to the adjacent index in question,
     is also considered to "flow downward" to the index.
 
-    If an index has a height > 8, it is not considered to "flow downward" to any index other than itself,
+    If an index has a height >8, it is not considered to "flow downward" to any index other than itself,
     even if it has a height that is greater than or equal to an adjacent height.
 
     Args:
-        heightmap: 2D array of heights
-        index: index of the 2D array of heights to calculate the basin size for
+        heightmap (numpy.typing.NDArray): 2D array of heights.
+        index: Index of the 2D array of heights to calculate the basin size for.
 
     Returns:
-        total number of indices that "flow downward"
+        int: Total number of indices that "flow downward" to `index`.
     """
     visited = set()
     index_queue = [index]
@@ -58,19 +58,19 @@ def basin_size(heightmap, index):
 
 
 def multiply_large_risk_basins(heightmap, n_largest=None):
-    """Multiply the size of the ``n_largest`` "risk basins" from ``heightmap``.
+    """Multiply the size of the `n_largest` "risk basins" from `heightmap`.
 
-    A basin is a "risk basin" if it is the basin of a local minimum of ``heightmap``.
-    This function finds the size of all disjoint basins in ``heightmap`` if (converse false)
+    A basin is a "risk basin" if it is the basin of a local minimum of `heightmap`.
+    This function finds the size of all disjoint basins in `heightmap` if
     adjacent heights are never equal and basins are separated by "walls" of height >8.
+    Note that the converse of this statement is false.
 
     Note that this function does not consider basins where the lowest height level forms a
     "plateau" of equal heights, because those indices are not considered local minimums.
 
     Args:
-        heightmap: n-dimensional array of heights
-        n_largest: number of the largest risk basins to consider
-            If ``None``, considered all the largest risk basins.
+        heightmap (numpy.typing.NDArray): Array of heights.
+        n_largest (int | None): Consider the largest `n_largest` risk basins (or all largest if ``None``).
     """
     largest_sizes = []
     for index, height in np.ndenumerate(heightmap):

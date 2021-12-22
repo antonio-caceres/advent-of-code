@@ -40,7 +40,7 @@ class BingoBoard:
 def win_bingo(nums, boards):
     """Find the bingo board that wins first and the number that causes the bingo.
 
-    Break ties using the order of ``boards``.
+    Break ties using the order of `boards`.
     """
     for num in nums:
         for board in boards:
@@ -52,7 +52,7 @@ def win_bingo(nums, boards):
 def lose_bingo(nums, boards):
     """Find the bingo board that loses last and the number that causes the bingo.
 
-    Break ties using the order of ``boards``, choosing the last board in ``boards``.
+    Break ties using the order of `boards`, choosing the last board.
     """
     winning_order = []
     for num in nums:

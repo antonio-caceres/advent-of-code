@@ -6,12 +6,13 @@ from collections import Counter
 from utils import read
 
 
+# TODO update documentation to use ReStructuredText's LaTeX equation support.
 def min_abs_distance(nums):
-    """Find the minimum sum of distances between ``nums`` and an integer.
+    """Find the minimum sum of distances between `nums` and an integer.
 
-    Minimizes, over ``N``, the sum of ``|n - N|`` for every ``n`` in ``nums``.
+    Minimizes, over ``N``, the sum of ``|n - N|`` for every ``n`` in `nums`.
     The sum is clearly concave up over ``N``, and by taking the derivative to optimize,
-    it's clear that the minimum ``N`` is an integer that divides ``nums`` in half.
+    it's clear that the minimum ``N`` is an integer that divides `nums` in half.
     This minimum ``N`` is not always unique, but the minimum sum of distances is unique.
     """
     if len(nums) == 0:
@@ -33,15 +34,16 @@ def min_abs_distance(nums):
     return min_distance
 
 
+# TODO update documentation to use ReStructuredText's LaTeX equation support.
 def min_scaling_distance(nums):
-    """Find the minimum integer sum of linearly scaling distances between ``nums`` and an integer.
+    """Find the minimum integer sum of linearly scaling distances between `nums` and an integer.
 
     Minimizes, over ``N``, the sum of ``|n - N - k|, for ``k`` between 0 and ``n - N``,
     and for every ``n`` in ``nums``.
     The sum is clearly concave up over ``N``, and by taking the derivative to optimize,
     it's clear that the minimum ``N`` is ``avg(n) - 0.25``.
-    This could be a non-integer, but the sum must be an integer, so we round the solution
-    to the nearest integer.
+    This could be a non-integer, but the sum must be an integer,
+    so we check the nearest two integers (the ceiling and the floor of the minimum ``N``).
     """
     if len(nums) == 0:
         return 0

@@ -32,25 +32,36 @@ class BracketsStatus(Enum):
     INCOMPLETE = "incomplete"
 
 
-def check_brackets(bracket_string):
+def check_brackets(bracket_str):
     """Check if a string containing brackets is valid ordering of opening and closing brackets.
 
     Bracket pairs are '()', '[]', '{}', and '<>'.
     A string with interposing non-bracket characters are supported.
 
     Args:
-        bracket_string: string of brackets to check
+        bracket_str: String of brackets to check for validity.
 
     Returns:
-        Status, error of the bracket check.
-        BracketsStatus.VALID for a valid string; ``error`` is ``None``.
-        BracketsStatus.CORRUPTED for an unexpected closing bracket; ``error`` is the corrupted character.
-        BracketsStatus.INCOMPLETE for opening brackets that were not closed; error is the list of unclosed brackets.
-            The unclosed brackets should be closed in the reverse order of the list provided
-            (i.e., first in the returned list is also first in the string, and should be closed last).
+        tuple[BracketsStatus, None | str | list[str]]: Tuple ``(status, error)``.
+
+        BracketsStatus: Status of the bracket check.
+            `BracketsStatus.VALID` if the bracket string is valid.
+            `BracketsStatus.CORRUPTED` if `bracket_str` contains an unexpected closing bracket.
+            `BracketsStatus.INCOMPLETE` if `bracket_str` contains opening brackets that were not closed.
+
+        None | str | list[str]: Error of the bracket check.
+            ``None`` if the status is `BracketsStatus.VALID`.
+            ``str`` if the status is `BracketsStatus.CORRUPTED`.
+                The unexpected closing bracket, i.e. the "corrupted character".
+            ``list[str]`` if the status is `BracketsStatus.INCOMPLETE`.
+                List of unclosed brackets, in the order they appear in the string.
+                To create a valid string, the closing brackets should occur in the
+                reverse order of the list provided.
+                I.e., the first bracket in the error list is also the first unclosed
+                opening bracket, and should be closed last.
     """
     opening_stack = []
-    for c in bracket_string:
+    for c in bracket_str:
         if c in BRACKETS.keys():
             opening_stack.append(c)
         elif c in BRACKETS.values():
@@ -64,7 +75,7 @@ def check_brackets(bracket_string):
 def sum_corrupted_errors(bracket_strings):
     """Sum the corrupted scores for all corrupted lines.
 
-    Syntax error scores are given by ``CORRUPTED_SCORES``, where the key
+    Syntax error scores are given by `CORRUPTED_SCORES`, where the key
     represents the **actual** closing bracket in the corrupted line.
     """
     syntax_error_sum = 0
@@ -83,7 +94,7 @@ def get_incomplete_score(bracket_string):
     the following two-step algorithm is performed to calculate the incomplete score:
 
     1. Multiply the current score by 5. (For the first closing bracket, begin with a score of 0.)
-    2. Add the score of the closing bracket, according to ``INCOMPLETE_SCORES``, to the total score.
+    2. Add the score of the closing bracket, according to `INCOMPLETE_SCORES`, to the total score.
     """
     status, error = check_brackets(bracket_string)
     if status != BracketsStatus.INCOMPLETE:

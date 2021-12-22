@@ -11,16 +11,16 @@ def count_increasing_windows(nums, length):
     sum the numbers in the window and compare to the sum of the next window.
 
     Args:
-        nums: iterable to compare the sliding windows of.
-        length: length of the sliding window interval.
+        nums: Iterable to compare the sliding windows of.
+        length: Length of the sliding window interval.
 
     Returns:
-        number of times the sliding window sum (strictly) increases over `nums`.
+        Number of times the sliding window sum (strictly) increases over `nums`.
         Returns 0 if the window length is larger than `nums`.
     """
     if len(nums) <= length:
         return 0
-    # Ignore the intersection of the two windows because their contributions are equal.
+    # ignore the intersection of the two windows because their contributions are equal
     comparisons = [nums[i + length] > nums[i] for i in range(len(nums) - length)]
     return sum(comparisons)
 

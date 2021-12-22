@@ -34,13 +34,13 @@ def _display_step_one(patterns, digit_mapping):
                 digit_mapping[8] = pattern
 
 
-STEP_TWO_KNOWN = [1, 4, 7, 8]
+_STEP_TWO_KNOWN = [1, 4, 7, 8]
 
 
 def _display_step_two(patterns, digit_mapping):
     """Deduce patterns (2, 3, 6, 9) using set operation strategies with known patterns (1, 4, 7, 8)."""
-    if None in {digit_mapping[x] for x in STEP_TWO_KNOWN}:
-        raise ValueError(f"digits {STEP_TWO_KNOWN} did not all have valid patterns")
+    if None in {digit_mapping[x] for x in _STEP_TWO_KNOWN}:
+        raise ValueError(f"digits {_STEP_TWO_KNOWN} did not all have valid patterns")
 
     for pattern in patterns:
         if len(pattern) == 5:  # possibly 2, 3, 5
@@ -75,13 +75,18 @@ def digit_segment_mapping(patterns):
     if the set of patterns provided is arbitrary.
 
     Args:
-        patterns: set (10-length iterable) of patterns to construct a mapping out of
+        patterns: Iterable of patterns to construct a mapping out of.
+            Should be length 10 after the removal duplicates.
 
     Returns:
-        10-length list of patterns, where the pattern at index ``i`` maps to digit ``i``.
-        If the pattern for digit ``i`` is not known, the pattern at index ``i`` is ``None``.
-        (the fixed-length list acts like a bidirectional mapping using the ``.index`` function;
-        because only 10 digits are ever used, the indexing is constant time.)
+        list[str]: 10-length list mapping digits to the matching digit segment patterns.
+            The pattern at index ``i`` maps to digit ``i``,
+            or is ``None`` if the pattern for digit ``i`` is unknown.
+
+    Notes:
+        The fixed-length list that is returned acts like a bidirectional mapping
+        using the ``list.index`` function.
+        Because only 10 digits ever have patterns, the indexing is constant time.
     """
     patterns = set(frozenset(pattern) for pattern in patterns)
     if len(patterns) != 10:
@@ -98,13 +103,13 @@ def count_digit_patterns(mapping, patterns, targets):
     """Count the number of target digits in a set of patterns, provided a mapping.
 
     Args:
-        mapping: 10-length list mapping from digit segment patterns to digits
+        mapping: 10-length list mapping digits to the matching digit segment patterns.
             The pattern at index ``i`` maps to digit ``i``, or is ``None`` if no pattern maps to digit ``i``.
-        patterns: iterable of patterns to check for the target digits
-        targets: target digits to check the patterns against
+        patterns: Iterable of patterns to check for the target digits.
+        targets: Target digits to check the patterns against.
 
     Returns:
-        total number of times the target digits were found in ``patterns``
+        int: Total number of times the target digits were found in `patterns`.
     """
     num_target_digits = 0
     for pattern in patterns:
@@ -119,12 +124,12 @@ def patterns_to_int(mapping, patterns):
     The first pattern in the iterable is the first digit in the integer, etc.
 
     Args:
-        mapping: 10-length list mapping from digit segment patterns to digits
+        mapping (list[str | None]): 10-length list mapping digits to the matching digit segment patterns.
             The pattern at index ``i`` maps to digit ``i``, or is ``None`` if no pattern maps to digit ``i``.
-        patterns: iterable of patterns to convert to an integer
+        patterns: Iterable of patterns to convert to an integer (in big-endian order).
 
     Returns:
-        seven-segment digit patterns as an integer
+        int: Sequence of seven-segment digit patterns converted to a (base 10) integer.
     """
     result = 0
     for i, pattern in enumerate(patterns[::-1]):

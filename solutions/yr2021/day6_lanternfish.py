@@ -25,12 +25,12 @@ class LanternfishSim:
         """Initialize a lanternfish simulation.
 
         Args:
-            cycle_dist: initial distribution of the fish by their cycle
-                baby fish should have cycle times of ``birth_cycle`` plus the number of cycles until adulthood
-                fish with cycle times greater than ``birth_cycle + growth_cycle`` are ignored
-            birth_cycle: number of time steps an adult fish takes to reproduce
-            growth_cycle: number of time steps a baby fish takes to become an adult
-                i.e. after being born, a fish takes ``birth_cycle + growth_cycle`` time steps to reproduction
+            cycle_dist: Initial distribution of the fish by their cycle.
+                Baby fish should have cycle times of `birth_cycle` plus the number of cycles until adulthood.
+                Fish with cycle times greater than ``birth_cycle + growth_cycle`` are ignored.
+            birth_cycle: Time steps an adult fish takes to reproduce.
+            growth_cycle: Time steps a baby fish takes to become an adult.
+                I.e., after being born, a fish takes ``birth_cycle + growth_cycle`` time steps to reproduce.
         """
         self._birth_cycle, self._growth_cycle = birth_cycle, growth_cycle
         self._adult_fish = Deque(cycle_dist[:birth_cycle], maxlen=birth_cycle)

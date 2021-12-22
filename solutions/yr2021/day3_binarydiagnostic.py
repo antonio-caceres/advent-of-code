@@ -15,7 +15,7 @@ class BoolCounter:
         self.total += 1
 
     def mode(self, tie_val: bool | None = None) -> bool | None:
-        """Return the boolean that has been counted more, or ``tie_val`` in the case of a tie."""
+        """Return the boolean that has been counted more, or `tie_val` in the case of a tie."""
         if self.num_true * 2 == self.total:
             return tie_val
         return self.num_true * 2 > self.total
@@ -33,11 +33,11 @@ def most_frequent_bools(bool_lists, tie_val=None):
     """Get the most frequent booleans per position from arrays of booleans.
 
     Args:
-        bool_lists: lists of booleans to get the frequency from
-        tie_val: boolean (or None) to use in the case of a tie in frequency
+        bool_lists (list[list[bool]]): Boolean lists to count the frequencies of.
+        tie_val (bool | None): Value to use in the case of a tie in frequency.
 
     Returns:
-        list[bool], most frequent booleans per position, or ``tie_val`` in the case of a tie.
+        list[bool | None]: Most frequent boolean per position, or `tie_val` in the case of a tie.
     """
     counters = []
 
@@ -63,7 +63,8 @@ def power_consumption(bool_lists):
     This design choice is intuitive from an algorithmic point of view, but could be a
     surprise if binary numbers of different representation sizes are used.
 
-    Raise ``ValueError`` if any of the positional frequencies are ties.
+    Raises:
+        ValueError: If any of the positional frequencies are ties.
     """
     gamma_list = most_frequent_bools(bool_lists)
     if None in gamma_list:
@@ -77,18 +78,18 @@ def filtered_frequent_bool(bool_lists, tie_val=None, least_freq=False):
     """Return a boolean list using the positional bit frequency counts and a filter.
 
     Given a list of boolean lists, count the most frequent bool in the first position.
-    (Use the least frequent bool if ``least_frequent`` is ``True``.)
-    In the case of a tie, use the bool indicated by ``tie_val``.
+    (Use the least frequent bool if `least_frequent` is ``True``.)
+    In the case of a tie, use the bool indicated by `tie_val`.
     Then, filter for only those strings that do not contain that bool in the first position.
     Repeat for all positions, and returns the resulting string.
 
     Args:
-        bool_lists: list[list[bool]], boolean lists to generate the frequency string from
-        tie_val: default bool to use in the case of a frequency tie
-        least_freq: if the least frequent bit should be used instead
+        bool_lists (list[list[bool]]): Boolean lists to generate the frequency string from.
+        tie_val (bool | None): Default value to use in the case of a frequency tie.
+        least_freq (bool): If the least frequent bit should be used instead of the most frequent.
 
     Returns:
-        binary string according to the algorithm above
+        Binary string, generated according to the algorithm described above.
     """
     filtered = {False: [], True: []}
 
