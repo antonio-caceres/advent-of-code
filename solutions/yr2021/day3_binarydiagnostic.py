@@ -114,22 +114,11 @@ def filtered_frequent_bool(bool_lists, tie_val=None, least_freq=False):
     return [result_bool] + filtered_frequent_bool(filtered[result_bool], tie_val, least_freq)
 
 
-def life_support(bool_lists):
-    """Get the life support rating from binary lists, as defined by the puzzle.
-
-    The life support rating is the product of oxygen generator and CO2 scrubber ratings.
-    Both are calculated according to the algorithm run by ``filtered_frequent_bool``,
-    where the oxygen generator rating has ``tie_val = True`` and ``least_freq == False``,
-    and the CO2 scrubber rating has ``tie_val = False`` and ``least_freq == True``.
-
-    The values are then treated as big-endian numbers, and multiplied to get the life support rating.
-    """
-    oxygen_rating = bools_to_int(filtered_frequent_bool(bool_lists, tie_val=True, least_freq=False))
-    co2_rating = bools_to_int(filtered_frequent_bool(bool_lists, tie_val=False, least_freq=True))
-    return oxygen_rating * co2_rating
-
-
 if __name__ == "__main__":
     binary_report = read.dayta(day=3, line_parser=read.iter_parser(lambda c: bool(int(c))))
     print(f"Part One: {power_consumption(binary_report)}")
-    print(f"Part Two: {life_support(binary_report)}")
+
+    oxygen_rating = bools_to_int(filtered_frequent_bool(binary_report, tie_val=True, least_freq=False))
+    co2_rating = bools_to_int(filtered_frequent_bool(binary_report, tie_val=False, least_freq=True))
+    # The life support rating is the product of oxygen generator and CO2 scrubber ratings.
+    print(f"Part Two: {oxygen_rating * co2_rating}")
