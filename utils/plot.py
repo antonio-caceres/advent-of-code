@@ -1,12 +1,16 @@
-"""Utility functions for plotting points and lines."""
+"""Utility functions for points and lines on a two-dimensional plot."""
 
+import functools
+import math
+import numbers
 from dataclasses import dataclass
+from enum import Enum
 from typing import Sequence
 
 
 @dataclass(frozen=True)
 class DiscretePoint:
-    """Discrete/integer-valued point."""
+    """Two-dimensional point that is integer-valued in both dimensions."""
     x: int
     y: int
 
@@ -18,7 +22,59 @@ class DiscretePoint:
         return f"{self.__class__.__name__}({self.x}, {self.y})"
 
 
-class DiscreteLineSegment:
+@functools.total_ordering
+class DiscreteSlope(Enum):
+    """Possible slope values for the `DiscreteLine` class.
+
+    For 2D lines with 0, -1, +1, or undefined/infinite slopes, if one of the points
+    on the line is integer-valued in both dimensions, then all the points on the line
+    that are integer-valued in one dimensions are integer-valued in the other.
+    """
+    ZERO = 0.0
+    POSITIVE = +1.0
+    NEGATIVE = -1.0
+    INFINITE = math.inf
+
+    def __float__(self):
+        return self.value
+
+    def __eq__(self, other):
+        if isinstance(other, (DiscreteSlope, numbers.Real)):
+            return float(self) == float(other)
+        else:
+            return NotImplemented
+
+    def __lt__(self, other):
+        if isinstance(other, (DiscreteSlope, numbers.Real)):
+            return float(self) < float(other)
+        else:
+            return NotImplemented
+
+
+class DiscreteLine:
+    """Line segment defined by integer points, restricted to a slope of +1, -1, 0, or infinite/undefined."""
+
+    def __init__(self,
+                 pt: DiscretePoint | tuple[int, int],
+                 slope: DiscreteSlope | int | None):
+        """Initialize a discrete line from a point and slope.
+
+        Args:
+            pt: Discrete point on the line.
+            slope: Slope of the line. If ``None``, is considered to be infinite/undefined.
+                Must be able to be converted into a `DiscreteSlope` if not ``None``.
+        """
+        self.pt = pt if isinstance(pt, DiscretePoint) else DiscretePoint(*pt)
+        self.slope = DiscreteSlope(math.inf) if slope is None else DiscreteSlope(slope)
+
+    def is_horizontal(self):
+        return self.slope == 0
+
+    def is_vertical(self):
+        return self.slope == math.inf
+
+
+class DiscreteLineSegment(DiscreteLine):
     """Line segment defined by integer points, restricted to a slope of +1, -1, 0, or undefined.
 
     For these line segments, on the domain of integer-valued x-coordinates,
@@ -34,26 +90,17 @@ class DiscreteLineSegment:
     def __init__(self, pt1: DiscretePoint, pt2: DiscretePoint):
         """Initialize a line segment from two points."""
         slope = (pt2.y - pt1.y) / (pt2.x - pt1.x) if pt2.x != pt1.x else None
-        if slope not in {1.0, -1.0, 0, None}:
-            raise ValueError(f"line segment should be +1, -1, 0, or undefined: {slope}")
+        super().__init__(pt1, slope)
+
         low_pt, high_pt = (pt1, pt2) if pt1.x <= pt2.x else (pt2, pt1)
         self.x_range = range(low_pt.x, high_pt.x + 1)
+        # y_step is simply a parameter to the range call to capture all of y_range in order.
+        # In the case low_py.y == high.pt_y, y_step should still be non-zero to ensure
+        # y_range is not an empty generator (either +1 or -1 would work in this case).
         y_step = +1 if low_pt.y <= high_pt.y else -1
         self.y_range = range(low_pt.y, high_pt.y + y_step, y_step)
-        # enforce invariant
-        assert any((
-            len(self.x_range) == len(self.y_range),
-            len(self.x_range) == 1,
-            len(self.y_range) == 1,
-        )), f"{list(self.x_range)}, {list(self.y_range)}"
 
-    def is_horizontal(self):
-        return len(self.y_range) == 1
-
-    def is_vertical(self):
-        return len(self.x_range) == 1
-
-    def integer_pts(self):
+    def discrete_pts(self):
         """Iterate over the points of the line segment that have integer values."""
         if self.is_horizontal():
             return (DiscretePoint(x, self.y_range[0]) for x in self.x_range)

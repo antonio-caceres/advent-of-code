@@ -24,7 +24,7 @@ def num_discrete_overlaps(line_segments):
     point_ct = DefaultDict(int)
     num_overlaps = 0
     for line_segment in line_segments:
-        for pt in line_segment.integer_pts():
+        for pt in line_segment.discrete_pts():
             point_ct[pt] += 1
             if point_ct[pt] == 2:  # only count when the first overlap occurs.
                 num_overlaps += 1
