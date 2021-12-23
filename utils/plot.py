@@ -56,7 +56,7 @@ class DiscreteLine:
 
     def __init__(self,
                  pt: DiscretePoint | tuple[int, int],
-                 slope: DiscreteSlope | int | None):
+                 slope: DiscreteSlope | int | float | None):
         """Initialize a discrete line from a point and slope.
 
         Args:
@@ -65,7 +65,15 @@ class DiscreteLine:
                 Must be able to be converted into a `DiscreteSlope` if not ``None``.
         """
         self.pt = pt if isinstance(pt, DiscretePoint) else DiscretePoint(*pt)
-        self.slope = DiscreteSlope(math.inf) if slope is None else DiscreteSlope(slope)
+        self.slope = DiscreteSlope.INFINITE if slope is None else DiscreteSlope(slope)
+
+    @classmethod
+    def horizontal_line(cls, y):
+        return cls((0, y), 0)
+
+    @classmethod
+    def vertical_line(cls, x):
+        return cls((x, 0), DiscreteSlope.INFINITE)
 
     def is_horizontal(self):
         return self.slope == 0
