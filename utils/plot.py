@@ -18,6 +18,14 @@ class DiscretePoint:
         yield self.x
         yield self.y
 
+    def __eq__(self, other):
+        if isinstance(other, DiscretePoint):
+            return self.x == other.x and self.y == other.y
+        elif isinstance(other, tuple):
+            return self == DiscretePoint(*other)
+        else:
+            return NotImplemented
+
     def __repr__(self):
         return f"{self.__class__.__name__}({self.x}, {self.y})"
 
