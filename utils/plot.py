@@ -30,6 +30,27 @@ class DiscretePoint:
         return f"{self.__class__.__name__}({self.x}, {self.y})"
 
 
+def sort_points(pts, by_y_coord=False, reverse=False):
+    """Sort an iterable of discrete points. By default, from smallest to largest by x-coordinate first.
+
+    This function returns `DiscretePoint` objects that are not the same objects as the
+    original points passed in.
+    This is an implementation detail since the `DiscretePoint` class is an immutable dataclass.
+
+    Args:
+        pts: Points to sort.
+        by_y_coord: If the points should be sorted first by y-coordinate.
+            If ``False``, sorts first by x-coordinate.
+        reverse: If the points should be sorted from greatest to smallest.
+
+    Returns:
+        Sorted list of discrete points.
+    """
+    coord_pairs = [(x, y) if not by_y_coord else (y, x) for x, y in pts]
+    sorted_pairs = sorted(coord_pairs, reverse=reverse)
+    return [DiscretePoint(x, y) if not by_y_coord else DiscretePoint(y, x) for x, y in sorted_pairs]
+
+
 @functools.total_ordering
 class DiscreteSlope(Enum):
     """Possible slope values for the `DiscreteLine` class.
